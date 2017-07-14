@@ -1,0 +1,13 @@
+Dependencies for Project 'Org_Two_Again', Target 'Target 1': (DO NOT MODIFY !)
+F (.\Plz_Work.s)(0x58A271FD)(--cpu Cortex-M7 --li --pd "__EVAL SETA 1" -g --apcs=interwork -I"D:\git\ARM asm\RTE"-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include--pd "__UVISION_VERSION SETA 521" --pd "_RTE_ SETA 1" --pd "ARMCM7 SETA 1"--list .\listings\plz_work.lst --xref -o .\objects\plz_work.o --depend .\objects\plz_work.d)
+F (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Lib\ARM\arm_cortexM7l_math.lib)(0x57365A7E)()
+F (RTE\Device\ARMCM7\startup_ARMCM7.s)(0x5735F38A)(--cpu Cortex-M7 --li --pd "__EVAL SETA 1" -g --apcs=interwork -I"D:\git\ARM asm\RTE"-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include--pd "__UVISION_VERSION SETA 521" --pd "_RTE_ SETA 1" --pd "ARMCM7 SETA 1"--list .\listings\startup_armcm7.lst --xref -o .\objects\startup_armcm7.o --depend .\objects\startup_armcm7.d)
+F (RTE\Device\ARMCM7\system_ARMCM7.c)(0x5735F38A)(-c --cpu Cortex-M7 -D__EVAL --li -g -O0 --apcs=interwork --split_sections-I"D:\git\ARM asm\RTE"-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include-D__UVISION_VERSION="521" -D_RTE_ -DARMCM7-o .\objects\system_armcm7.o --omf_browse .\objects\system_armcm7.crf --depend .\objects\system_armcm7.d)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include\ARMCM7.h)(0x5735F388)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cm7.h)(0x57365A7E)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x574F0306)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cminstr.h)(0x5735F386)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\cmsis_armcc.h)(0x5735F386)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmfunc.h)(0x5735F386)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include\core_cmsimd.h)(0x5735F386)
+I (C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include\system_ARMCM7.h)(0x5735F388)

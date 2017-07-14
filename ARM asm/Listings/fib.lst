@@ -1,0 +1,133 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             Fib, CODE, READONLY
+    2 00000000         
+    3 00000000                 ENTRY
+    4 00000000         
+    5 00000000                 EXPORT           main
+    6 00000000         
+    7 00000000         main
+    8 00000000         
+    9 00000000 F04F 0501       MOV              R5, #1      ; R5 will hold a_k.
+                                                             Will start out as 
+                                                            the innitial value 
+                                                            1.
+   10 00000004         
+   11 00000004 F04F 0601       MOV              R6, #1      ; R6 will hold a_(k
+                                                            -1). Will start out
+                                                             as the innitial va
+                                                            lue 1.
+   12 00000008         
+   13 00000008 F04F 0700       MOV              R7, #0      ; R7 will hold a_(k
+                                                            -2). Should become 
+                                                            2 in the innitial r
+                                                            un. Also, should sh
+                                                            ow result.
+   14 0000000C         
+   15 0000000C F04F 0800       MOV              R8, #0      ; R8 holds the valu
+                                                            e to display, incas
+                                                            e the loop ends.
+   16 00000010         
+   17 00000010 F04F 0900       MOV              R9, #0      ; R9 will hold the 
+                                                            count control, whic
+                                                            h represents n+1.
+   18 00000014         
+   19 00000014 F109 0A02       ADD              R10, R9, #2
+   20 00000018         
+   21 00000018         loop
+   22 00000018         
+   23 00000018 F1BA 0F03       CMP              R10, #3
+   24 0000001C         
+   25 0000001C D009            BEQ              loopDone
+   26 0000001E         
+   27 0000001E EB06 0705       ADD              R7, R6, R5  ; a_k = a_(k-1)+a_(
+                                                            k-2)
+   28 00000022         
+   29 00000022 46B8            MOV              R8, R7      ; In case the loop 
+                                                            ends in this iterat
+                                                            ion, MOV value of a
+                                                            _k to R8.
+   30 00000024         
+   31 00000024 4635            MOV              R5, R6      ; For next iteratio
+                                                            n, I need to store 
+                                                            the R6's value into
+                                                             a_(k-2).
+   32 00000026         
+   33 00000026 463E            MOV              R6, R7      ; For next iteratio
+                                                            n, I should store t
+                                                            he R7's value into 
+                                                            a_(k-1).
+   34 00000028         
+   35 00000028 F04F 0700       MOV              R7, #0      ; Clear off the R7 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            in order to prepare
+                                                             for the next itere
+                                                            ation.
+   36 0000002C         
+   37 0000002C F10A 0A01       ADD              R10, #1     ; Increment the cou
+                                                            nter.
+   38 00000030         
+   39 00000030 E7F2            B                loop
+   40 00000032         
+   41 00000032         loopDone
+   42 00000032         
+   43 00000032 DF11            SWI              #0x11       ; Whatever value th
+                                                            at is in the R8 is 
+                                                            the result.
+   44 00000034         
+   45 00000034                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\fib.d -o.\objects\fib.o -I"D:\git\ARM asm\RTE" -IC:\Keil
+_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSI
+S\5.0.0-Beta4\Device\ARM\ARMCM3\Include --predefine="__EVAL SETA 1" --predefine
+="__UVISION_VERSION SETA 521" --predefine="_RTE_ SETA 1" --predefine="ARMCM3 SE
+TA 1" --list=.\listings\fib.lst Fib.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Fib 00000000
+
+Symbol: Fib
+   Definitions
+      At line 1 in file Fib.s
+   Uses
+      None
+Comment: Fib unused
+loop 00000018
+
+Symbol: loop
+   Definitions
+      At line 21 in file Fib.s
+   Uses
+      At line 39 in file Fib.s
+Comment: loop used once
+loopDone 00000032
+
+Symbol: loopDone
+   Definitions
+      At line 41 in file Fib.s
+   Uses
+      At line 25 in file Fib.s
+Comment: loopDone used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 7 in file Fib.s
+   Uses
+      At line 5 in file Fib.s
+Comment: main used once
+4 symbols
+338 symbols in table

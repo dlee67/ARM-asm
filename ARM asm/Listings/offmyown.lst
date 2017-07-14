@@ -1,0 +1,543 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             OffMyOwn, CODE, READONLY
+    2 00000000         
+    3 00000000                 ENTRY
+    4 00000000         
+    5 00000000                 EXPORT           main
+    6 00000000         
+    7 00000000         main
+    8 00000000         
+    9 00000000 4B36            LDR              R3, =HCode
+   10 00000002         
+   11 00000002 F04F 0400       MOV              R4, #0      ; R4 will contain t
+                                                            he bytes those will
+                                                             be transferred to 
+                                                            from HCode.
+   12 00000006         
+   13 00000006 F04F 0501       MOV              R5, #1      ; R5 will play a ro
+                                                            le as an index to b
+                                                            e computated with o
+                                                            ther things.
+   14 0000000A         ; Taking a consideration that HammingCode's index starts
+                        from one.
+   15 0000000A         
+   16 0000000A F04F 0600       MOV              R6, #0      ; R6 will act as th
+                                                            e index that will p
+                                                            oint through the HC
+                                                            ode. 
+   17 0000000E         
+   18 0000000E F04F 0700       MOV              R7, #0      ; pRec, which is th
+                                                            e register that has
+                                                             received that pair
+                                                            ity.
+   19 00000012         
+   20 00000012 F04F 0800       MOV              R8, #0      ; pCal, calculated 
+                                                            parity bits.
+   21 00000016         
+   22 00000016 F04F 0900       MOV              R9, #0      ; for the purpose o
+                                                            f counting 1's, hav
+                                                            e it be n.
+   23 0000001A         
+   24 0000001A F04F 0A00       MOV              R10, #0     ; for the purpose o
+                                                            f counting 1's, hav
+                                                            e it be n - 1.
+   25 0000001E         
+   26 0000001E F04F 0B00       MOV              R11, #0     ; counting ones, wh
+                                                            ich is counting AND
+                                                            s happened.
+   27 00000022         
+   28 00000022         checkLoop                            ; while(R4 != 0)
+   29 00000022         
+   30 00000022 5D9C            LDRB             R4, [R3, R6]
+   31 00000024         
+   32 00000024 2C00            CMP              R4, #0
+   33 00000026         
+   34 00000026 D01A            BEQ              checkLoopDone
+   35 00000028         ;So, the logic is that, okay, out loops aren't finished,
+                        I got a 1 or 0 as a character. 
+   36 00000028         
+   37 00000028 F1A4 0430       SUB              R4, #'0'    ; Subtract R4 with 
+                                                            '0', so I actually 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            get a number...
+   38 0000002C         
+   39 0000002C         ;Now, I need to count the ones, in order to see if the b
+                       it I've got is part of a check bit or a data bit.
+   40 0000002C         
+   41 0000002C 46A9            MOV              R9, R5      ; To have my materi
+                                                            al be separated fro
+                                                            m the rest. 
+   42 0000002E         
+   43 0000002E F04F 0B00       MOV              R11, #0
+   44 00000032         
+   45 00000032 F000 F847       BL               countOnes   ;Seems like I am co
+                                                            unting ones right.
+   46 00000036         
+   47 00000036         ;I am guessing it's time for me to compare stuff.
+   48 00000036         
+   49 00000036 F1BB 0F01       CMP              R11, #1     ;To see if it is ch
+                                                            eck bit.
+   50 0000003A         
+   51 0000003A D008            BEQ              isCheck
+   52 0000003C         
+   53 0000003C         notCheck                             ;If it is not a che
+                                                            ck bit, then 
+   54 0000003C         
+   55 0000003C 2C01            CMP              R4, #1
+   56 0000003E         
+   57 0000003E BF08 EA88 
+              0805             EOREQ            R8, R8, R5
+   58 00000044         
+   59 00000044 F105 0501       ADD              R5, R5, #1
+   60 00000048         
+   61 00000048 F106 0601       ADD              R6, R6, #1
+   62 0000004C         
+   63 0000004C E7E9            B                checkLoop
+   64 0000004E         
+   65 0000004E         isCheck                              ;If it is a check b
+                                                            it, then ORR the th
+                                                            ing and store that 
+                                                            to pRec
+   66 0000004E         
+   67 0000004E 2C01            CMP              R4, #1
+   68 00000050         
+   69 00000050 BF08 432F       ORREQ            R7, R7, R5
+   70 00000054         
+   71 00000054 F105 0501       ADD              R5, R5, #1
+   72 00000058         
+   73 00000058 F106 0601       ADD              R6, R6, #1
+   74 0000005C         
+   75 0000005C E7E1            B                checkLoop
+   76 0000005E         
+   77 0000005E         checkLoopDone
+   78 0000005E         
+   79 0000005E         ;I need to see if I do have an error.
+   80 0000005E         
+   81 0000005E EA87 0408       EOR              R4, R7, R8  ; I should be getti
+                                                            ng the position whe
+                                                            re the error has oc
+                                                            curred;
+   82 00000062         ; into that address, I need to chuck in a one.
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   83 00000062         
+   84 00000062 2C00            CMP              R4, #0
+   85 00000064         
+   86 00000064 D007            BEQ              noErr
+   87 00000066         
+   88 00000066 F1A4 0401       SUB              R4, #1      ;Subtract one becau
+                                                            se hamming code is 
+                                                            +1.
+   89 0000006A         
+   90 0000006A 5D1E            LDRB             R6, [R3, R4] ; See if the bit I
+                                                             need to flip is 1 
+                                                            or 0.
+   91 0000006C         
+   92 0000006C 2E31            CMP              R6, #'1'    ;If it's 1...
+   93 0000006E         
+   94 0000006E BF0C 2530       MOVEQ            R5, #'0'    ;Prepare to move 0 
+                                                            into it. 
+   95 00000072         
+   96 00000072 2531            MOVNE            R5, #'1'    ;if it's not one, t
+                                                            hen prepare to flip
+                                                             the bit.   
+   97 00000074         
+   98 00000074 551D            STRB             R5, [R3, R4] ; The  
+   99 00000076         
+  100 00000076         noErr
+  101 00000076         
+  102 00000076         ;R3, =HCode <-I would still want that since because I ne
+                       ed to transfer those bits those I've gotten
+  103 00000076         
+  104 00000076 4C1A            LDR              R4, =SrcWord
+  105 00000078         
+  106 00000078 F04F 0500       MOV              R5, #0      ; R5 will contain t
+                                                            he bytes those will
+                                                             be transferred to 
+                                                            SrcWord
+  107 0000007C         
+  108 0000007C F04F 0601       MOV              R6, #1      ; Since the hamming
+                                                             code starts with 1
+                                                            , R6 will starts to
+                                                             increment from one
+                                                            .
+  109 00000080         
+  110 00000080 F04F 0700       MOV              R7, #0      ; R7 will hold the 
+                                                            memory location for
+                                                             the HCode.
+  111 00000084         
+  112 00000084 F04F 0800       MOV              R8, #0      ; R8 is for the pur
+                                                            pose of using incre
+                                                            menting the address
+                                                             for the SrcWord.
+  113 00000088         
+  114 00000088 F04F 0B00       MOV              R11, #0     ; For the purpose o
+                                                            f counting ones.
+  115 0000008C         
+  116 0000008C         
+  117 0000008C F04F 0501       MOV              R5, #1      ;For the sake of no
+                                                            t having the loop n
+                                                            ot end right at the
+                                                             moment it begins.
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  118 00000090         
+  119 00000090         putBitsIntoSrcWord
+  120 00000090         
+  121 00000090 2D00            CMP              R5, #0      ; Compare the R5 wi
+                                                            th null, if null, f
+                                                            inish the loop
+  122 00000092         
+  123 00000092 D012            BEQ              Done
+  124 00000094         
+  125 00000094 5DDD            LDRB             R5, [R3, R7] ;Load byte by byte
+                                                             from the matrials 
+                                                            of the HCode.
+  126 00000096         
+  127 00000096         ;But if it is a check bit, I need to skip the thing...
+  128 00000096         
+  129 00000096 46B1            MOV              R9, R6      ; Move R6 into the 
+                                                            R9, for the purpose
+                                                             of checking if the
+                                                             bit is a check bit
+                                                            .
+  130 00000098         
+  131 00000098 F000 F814       BL               countOnes
+  132 0000009C         
+  133 0000009C F1BB 0F01       CMP              R11, #1     ; If one, then ANDi
+                                                            ng only happened on
+                                                            ce; thus, the bit i
+                                                            s a data bit.
+  134 000000A0         
+  135 000000A0 D004            BEQ              skipCheckBit
+  136 000000A2         
+  137 000000A2         ;If not check bit, then store the material into the SrcW
+                       ord.
+  138 000000A2         
+  139 000000A2 F804 5008       STRB             R5, [R4, R8] ;Store the LSB int
+                                                            o the address of th
+                                                            e SrcWord
+  140 000000A6         
+  141 000000A6 BF18 F108 
+              0801             ADDNE            R8, #1      ; As Mr.John have s
+                                                            uggested.
+  142 000000AC         
+  143 000000AC         skipCheckBit
+  144 000000AC         
+  145 000000AC F106 0601       ADD              R6, #1      ;Incrementing the H
+                                                            amming Code's index
+                                                            . 
+  146 000000B0         
+  147 000000B0 F107 0701       ADD              R7, #1      ;Incrementing the l
+                                                            ocation of the memo
+                                                            ry.
+  148 000000B4         
+  149 000000B4 F04F 0B00       MOV              R11, #0     ;Reset R11 so when 
+                                                            counting ones happe
+                                                            n again, it won't c
+                                                            ause a logic error.
+                                                            
+  150 000000B8         
+  151 000000B8 E7EA            B                putBitsIntoSrcWord
+  152 000000BA         
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  153 000000BA         Done
+  154 000000BA         
+  155 000000BA F04F 0500       MOV              R5, #0      ;
+  156 000000BE         
+  157 000000BE F804 5008       STRB             R5, [R4, R8] ; To wrap up thing
+                                                            s with null-termina
+                                                            tor.
+  158 000000C2         
+  159 000000C2 DF11            SWI              #0x11
+  160 000000C4         
+  161 000000C4         
+  162 000000C4         countOnes                            ; while(R9 != 0)
+  163 000000C4         
+  164 000000C4         ;For counting ones, expression of (n) & (n-1) is used.
+  165 000000C4         
+  166 000000C4 F1B9 0F00       CMP              R9, #0
+  167 000000C8         
+  168 000000C8 BF08 4770       BXEQ             LR          ; Instruction so I 
+                                                            can return. 
+  169 000000CC         
+  170 000000CC F1A9 0A01       SUB              R10, R9, #1 ; To make n-1
+  171 000000D0         
+  172 000000D0 EA09 090A       AND              R9, R9, R10 ; (n) & (n - 1)
+  173 000000D4         
+  174 000000D4 F10B 0B01       ADD              R11, #1     ; Officially counti
+                                                            ng. 
+  175 000000D8         
+  176 000000D8 E7F4            B                countOnes
+  177 000000DA         
+  178 000000DA 00 00           ALIGN
+  179 000000DC 00000000 
+              00000000         AREA             DOffMyOwn, DATA, READWRITE
+  180 00000000         
+  181 00000000                 EXPORT           adrHCode
+  182 00000000         
+  183 00000000                 EXPORT           adrSrcWord
+  184 00000000         
+  185 00000000 00000064 
+                       MAX_LEN EQU              100
+  186 00000000         
+  187 00000000 30 30 31 
+              30 31 31 
+              31 00    HCode   DCB              "0010111", 0
+  188 00000008         
+  189 00000008                 ALIGN
+  190 00000008         
+  191 00000008 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00    SrcWord SPACE            MAX_LEN+1
+  192 0000006D         
+  193 0000006D 00 00 00        ALIGN
+  194 00000070         
+  195 00000070 00000000 
+                       adrHCode
+                               DCD              HCode
+  196 00000074         
+  197 00000074                 ALIGN
+  198 00000074         
+  199 00000074 00000000 
+                       adrSrcWord
+                               DCD              SrcWord
+  200 00000078         
+  201 00000078                 ALIGN
+  202 00000078         
+  203 00000078                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\offmyown.d -o.\objects\offmyown.o -I"D:\git\ARM asm\RTE"
+ -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\Keil_v5\ARM\PAC
+K\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM3\Include --predefine="__EVAL SETA 1" -
+-predefine="__UVISION_VERSION SETA 521" --predefine="_RTE_ SETA 1" --predefine=
+"ARMCM3 SETA 1" --list=.\listings\offmyown.lst OffMyOwn.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Done 000000BA
+
+Symbol: Done
+   Definitions
+      At line 153 in file OffMyOwn.s
+   Uses
+      At line 123 in file OffMyOwn.s
+Comment: Done used once
+OffMyOwn 00000000
+
+Symbol: OffMyOwn
+   Definitions
+      At line 1 in file OffMyOwn.s
+   Uses
+      None
+Comment: OffMyOwn unused
+checkLoop 00000022
+
+Symbol: checkLoop
+   Definitions
+      At line 28 in file OffMyOwn.s
+   Uses
+      At line 63 in file OffMyOwn.s
+      At line 75 in file OffMyOwn.s
+
+checkLoopDone 0000005E
+
+Symbol: checkLoopDone
+   Definitions
+      At line 77 in file OffMyOwn.s
+   Uses
+      At line 34 in file OffMyOwn.s
+Comment: checkLoopDone used once
+countOnes 000000C4
+
+Symbol: countOnes
+   Definitions
+      At line 162 in file OffMyOwn.s
+   Uses
+      At line 45 in file OffMyOwn.s
+      At line 131 in file OffMyOwn.s
+      At line 176 in file OffMyOwn.s
+
+isCheck 0000004E
+
+Symbol: isCheck
+   Definitions
+      At line 65 in file OffMyOwn.s
+   Uses
+      At line 51 in file OffMyOwn.s
+Comment: isCheck used once
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 7 in file OffMyOwn.s
+   Uses
+      At line 5 in file OffMyOwn.s
+Comment: main used once
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+noErr 00000076
+
+Symbol: noErr
+   Definitions
+      At line 100 in file OffMyOwn.s
+   Uses
+      At line 86 in file OffMyOwn.s
+Comment: noErr used once
+notCheck 0000003C
+
+Symbol: notCheck
+   Definitions
+      At line 53 in file OffMyOwn.s
+   Uses
+      None
+Comment: notCheck unused
+putBitsIntoSrcWord 00000090
+
+Symbol: putBitsIntoSrcWord
+   Definitions
+      At line 119 in file OffMyOwn.s
+   Uses
+      At line 151 in file OffMyOwn.s
+Comment: putBitsIntoSrcWord used once
+skipCheckBit 000000AC
+
+Symbol: skipCheckBit
+   Definitions
+      At line 143 in file OffMyOwn.s
+   Uses
+      At line 135 in file OffMyOwn.s
+Comment: skipCheckBit used once
+11 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DOffMyOwn 00000000
+
+Symbol: DOffMyOwn
+   Definitions
+      At line 179 in file OffMyOwn.s
+   Uses
+      None
+Comment: DOffMyOwn unused
+HCode 00000000
+
+Symbol: HCode
+   Definitions
+      At line 187 in file OffMyOwn.s
+   Uses
+      At line 9 in file OffMyOwn.s
+      At line 195 in file OffMyOwn.s
+
+SrcWord 00000008
+
+Symbol: SrcWord
+   Definitions
+      At line 191 in file OffMyOwn.s
+   Uses
+      At line 104 in file OffMyOwn.s
+      At line 199 in file OffMyOwn.s
+
+adrHCode 00000070
+
+Symbol: adrHCode
+   Definitions
+      At line 195 in file OffMyOwn.s
+   Uses
+      At line 181 in file OffMyOwn.s
+Comment: adrHCode used once
+adrSrcWord 00000074
+
+Symbol: adrSrcWord
+   Definitions
+      At line 199 in file OffMyOwn.s
+   Uses
+      At line 183 in file OffMyOwn.s
+Comment: adrSrcWord used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+MAX_LEN 00000064
+
+Symbol: MAX_LEN
+   Definitions
+      At line 185 in file OffMyOwn.s
+   Uses
+      At line 191 in file OffMyOwn.s
+Comment: MAX_LEN used once
+1 symbol
+353 symbols in table

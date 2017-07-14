@@ -1,0 +1,55 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             ReCheck, CODE, READONLY
+    2 00000000         
+    3 00000000                 ENTRY
+    4 00000000         
+    5 00000000                 EXPORT           main
+    6 00000000         
+    7 00000000         main
+    8 00000000         
+    9 00000000 4D02            LDR              R5, =0x902E8C9A ; Pouring
+   10 00000002         
+   11 00000002 F04F 5600       LDR              R6, =0x20000000 ; Designating a
+                                                            ddress
+   12 00000006         
+   13 00000006 6035            STR              R5, [R6]    ;Chunking in
+   14 00000008         
+   15 00000008 F996 7000       LDRSB            R7, [R6]
+   16 0000000C         
+   17 0000000C                 END
+              902E8C9A 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7 --apcs=interw
+ork --depend=.\objects\recheck.d -o.\objects\recheck.o -I"D:\git\ARM asm\RTE" -
+IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\Keil_v5\ARM\PACK\
+ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include --predefine="__EVAL SETA 1" --p
+redefine="__UVISION_VERSION SETA 521" --predefine="_RTE_ SETA 1" --predefine="A
+RMCM7 SETA 1" --list=.\listings\recheck.lst ReCheck.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ReCheck 00000000
+
+Symbol: ReCheck
+   Definitions
+      At line 1 in file ReCheck.s
+   Uses
+      None
+Comment: ReCheck unused
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 7 in file ReCheck.s
+   Uses
+      At line 5 in file ReCheck.s
+Comment: main used once
+2 symbols
+338 symbols in table

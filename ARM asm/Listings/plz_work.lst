@@ -1,0 +1,142 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             TextA, DATA, READWRITE
+    2 00000000         
+    3 00000000                 EXPORT           STOREPLACE
+    4 00000000         
+    5 00000000 00000000 
+                       STOREPLACE
+                               DCD              STORE
+    6 00000004         
+    7 00000004 48 49 00 
+                       STORE   DCB              "HI", 0
+    8 00000007         
+    9 00000007         
+   10 00000007                 AREA             Text1, CODE, READONLY
+   11 00000000         
+   12 00000000                 EXPORT           main
+   13 00000000         
+   14 00000000                 ENTRY
+   15 00000000         
+   16 00000000         main
+   17 00000000         
+   18 00000000         ;The example below is straight off from the book.
+   19 00000000         
+   20 00000000 F248 0600       MOVW             R6, #0x00008000
+   21 00000004         
+   22 00000004 F240 0500       MOVW             R5, #0
+   23 00000008         
+   24 00000008 F64B 25BE       MOVW             R5, #0x0000BABE
+   25 0000000C         
+   26 0000000C F105 4570       ADD              R5, #0xF0000000
+   27 00000010         
+   28 00000010 F105 6560       ADD              R5, #0x0E000000
+   29 00000014         
+   30 00000014 F505 0560       ADD              R5, #0x00E00000
+   31 00000018         
+   32 00000018 F505 2550       ADD              R5, #0x000D0000
+   33 0000001C         
+   34 0000001C         ;ADR R7, STOREPLACE
+   35 0000001C         
+   36 0000001C         ;STR R5, [R7] 
+   37 0000001C         
+   38 0000001C DF11            SWI              0x11
+   39 0000001E         
+   40 0000001E         ;So, the adrString contains the content in String?
+   41 0000001E         ;In my understanding, the below instructions are having 
+                       adrString contain the location called String.
+   42 0000001E         ;and the address location called String contains the ASC
+                       II of HI
+   43 0000001E         ;but when I looked into memory location called 0x0414, n
+                       othing seemed to be there.
+   44 0000001E         
+   45 0000001E         ;adrString DCD String
+   46 0000001E         
+   47 0000001E         ;String DCB "Hi" 
+   48 0000001E         
+   49 0000001E         ; LDR R5, =adrString
+   50 0000001E         
+   51 0000001E         ; ADR R6, adrString
+   52 0000001E         
+   53 0000001E         ;I recognize that the BL will save the address to return
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                        to, but 
+   54 0000001E         ;it's giving me an error if I am trying to branch to R14
+                       .
+   55 0000001E         ; MOV R5, #0
+   56 0000001E         ; BL Jump
+   57 0000001E         ;Jump MOVW R5, #0x000000FF
+   58 0000001E         ; MOV R5, #0
+   59 0000001E         ; B R14
+   60 0000001E         
+   61 0000001E                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M7 --apcs=interw
+ork --depend=.\objects\plz_work.d -o.\objects\plz_work.o -I"D:\git\ARM asm\RTE"
+ -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\Include -IC:\Keil_v5\ARM\PAC
+K\ARM\CMSIS\5.0.0-Beta4\Device\ARM\ARMCM7\Include --predefine="__EVAL SETA 1" -
+-predefine="__UVISION_VERSION SETA 521" --predefine="_RTE_ SETA 1" --predefine=
+"ARMCM7 SETA 1" --list=.\listings\plz_work.lst Plz_Work.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STORE 00000004
+
+Symbol: STORE
+   Definitions
+      At line 7 in file Plz_Work.s
+   Uses
+      At line 5 in file Plz_Work.s
+Comment: STORE used once
+STOREPLACE 00000000
+
+Symbol: STOREPLACE
+   Definitions
+      At line 5 in file Plz_Work.s
+   Uses
+      At line 3 in file Plz_Work.s
+Comment: STOREPLACE used once
+TextA 00000000
+
+Symbol: TextA
+   Definitions
+      At line 1 in file Plz_Work.s
+   Uses
+      None
+Comment: TextA unused
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Text1 00000000
+
+Symbol: Text1
+   Definitions
+      At line 10 in file Plz_Work.s
+   Uses
+      None
+Comment: Text1 unused
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 16 in file Plz_Work.s
+   Uses
+      At line 12 in file Plz_Work.s
+Comment: main used once
+2 symbols
+339 symbols in table
